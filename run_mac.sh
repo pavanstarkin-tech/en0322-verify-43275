@@ -70,6 +70,11 @@ grep -oE 'decide_file[^"]{0,220}|SandboxFinalState[^"]{0,200}|SandboxRuleSync[^"
 # ================= 消费腿: 真 launchd 加载 RunAtLoad plist =================
 # bootstrap gui/<uid> 该 plist = 登录会话枚举 ~/Library/LaunchAgents 时对每个 plist 做的加载操作。
 echo "=== 消费腿: launchctl 加载 ===" | tee -a "$SAVE/case.txt"
+if [ -f /tmp/darwin_canary_43122.txt ]; then
+  echo "PRE_BOOTSTRAP_CANARY_PRESENT" | tee -a "$SAVE/case.txt"
+else
+  echo "PRE_BOOTSTRAP_CANARY_ABSENT" | tee -a "$SAVE/case.txt"
+fi
 rm -f /tmp/darwin_canary_43122.txt
 launchctl print gui/$(id -u) >/dev/null 2>&1 && DOM="gui/$(id -u)" || DOM="user/$(id -u)"
 echo "LAUNCHD_DOMAIN=$DOM" | tee -a "$SAVE/case.txt"
