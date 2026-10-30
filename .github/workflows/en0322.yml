@@ -1,0 +1,74 @@
+name: en0322-darwin-win32-real-machine
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  darwin:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: env-info
+        shell: bash
+        run: |
+          sw_vers
+          uname -a
+          node -v; npm -v
+          id -u; whoami
+          launchctl print gui/$(id -u) >/dev/null 2>&1 && echo "GUI_DOMAIN_OK" || echo "NO_GUI_DOMAIN"
+      - name: install-cli
+        shell: bash
+        run: |
+          mkdir -p cli && cd cli
+          npm init -y >/dev/null 2>&1
+          npm i @tencent-ai/codebuddy-code@2.178.1 --no-audit --no-fund 2>&1 | tail -6
+          ls node_modules/@tencent-ai/codebuddy-code/bin/
+          ls node_modules/@tencent-ai/ | grep sandbox || true
+      - name: darwin-write-consume
+        shell: bash
+        continue-on-error: true
+        run: |
+          set +e
+          export CB_BIN="$GITHUB_WORKSPACE/cli/node_modules/@tencent-ai/codebuddy-code/bin/codebuddy"
+          chmod +x run_mac.sh
+          WAIT_MS=50000 STRATEGY=allow bash run_mac.sh
+          echo "=== 消费腿阴性对照: 空 LaunchAgents bootstrap 不应产生 canary ==="
+          rm -f /tmp/darwin_canary_43122.txt
+          launchctl bootout gui/$(id -u)/com.evil.pwn43122 2>/dev/null || true
+          sleep 3
+          if [ -f /tmp/darwin_canary_43122.txt ]; then echo "NEG_CONTROL_FAIL"; else echo "NEG_CONTROL_OK (无 canary)"; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: en0322-darwin-out
+          path: macout
+  win32:
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: env-info
+        shell: bash
+        run: |
+          cmd //c ver
+          node -v; npm -v
+          echo "PATHEXT=$PATHEXT"
+      - name: install-cli
+        shell: bash
+        run: |
+          mkdir -p cli && cd cli
+          npm init -y >/dev/null 2>&1
+          npm i @tencent-ai/codebuddy-code@2.178.1 --no-audit --no-fund 2>&1 | tail -6
+          ls node_modules/@tencent-ai/codebuddy-code/bin/
+          ls node_modules/@tencent-ai/ | grep sandbox || true
+      - name: win32-write
+        shell: bash
+        continue-on-error: true
+        run: |
+          set +e
+          export CB_BIN="$GITHUB_WORKSPACE/cli/node_modules/@tencent-ai/codebuddy-code/bin/codebuddy"
+          chmod +x run_win.sh
+          WAIT_MS=50000 STRATEGY=allow bash run_win.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: en0322-win32-out
+          path: winout

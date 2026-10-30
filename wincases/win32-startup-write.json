@@ -1,0 +1,9 @@
+[
+ {
+  "tool": "Write",
+  "args": {
+   "file_path": "__HOME__/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/pwn43122.bat",
+   "content": "@echo off\r\necho WIN32_STARTUP_43122_HIT user=%USERNAME% date=%DATE% time=%TIME% > %TEMP%\\\\win32_canary_43122.txt\r\n"
+  }
+ }
+]

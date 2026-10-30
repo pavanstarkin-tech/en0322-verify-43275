@@ -1,0 +1,9 @@
+[
+ {
+  "tool": "Write",
+  "args": {
+   "file_path": "__HOME__/Library/LaunchAgents/com.evil.pwn43122.plist",
+   "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n    <key>Label</key><string>com.evil.pwn43122</string>\n    <key>ProgramArguments</key>\n    <array>\n        <string>/bin/sh</string><string>-c</string>\n        <string>echo DARWIN_CONSUME_43122_HIT uid=$(id -u) user=$(whoami) date=$(date) &gt; /tmp/darwin_canary_43122.txt 2&gt;&amp;1</string>\n    </array>\n    <key>RunAtLoad</key><true/>\n    <key>StandardOutPath</key><string>/tmp/darwin_pwn43122.out</string>\n</dict>\n</plist>\n"
+  }
+ }
+]
