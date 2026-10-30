@@ -64,5 +64,6 @@ echo "=== 落盘检查 ===" | tee -a "$SAVE/case.txt"
 ls -l "$BAT" 2>&1 | tee -a "$SAVE/case.txt"
 cp "$BAT" "$SAVE/pwn43122.bat" 2>/dev/null
 grep -o 'STATS permission#[0-9]*[^"]\{0,220\}' "$SAVE/acp.log" 2>/dev/null | head -6 | tee -a "$SAVE/case.txt"
-grep -oE 'decide_file[^"]{0,220}|SandboxFinalState[^"]{0,200}|SandboxRuleSync[^"]{0,160}' "$SAVE/acp.log" 2>/dev/null | head -20 | tee -a "$SAVE/case.txt"
+grep -hoE 'decide_file .*' "$SAVE/acp.log" "$RUNROOT/home/.workbuddy/logs/"*/*/*.log 2>/dev/null | head -5 | tee -a "$SAVE/case.txt"
+grep -hoE 'SandboxFinalState[^"]{0,200}|SandboxRuleSync[^"]{0,160}' "$SAVE/acp.log" 2>/dev/null | head -5 | tee -a "$SAVE/case.txt"
 echo "WIN32_DONE" | tee -a "$SAVE/case.txt"

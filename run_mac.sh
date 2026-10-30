@@ -65,7 +65,8 @@ echo "=== 落盘检查 ===" | tee -a "$SAVE/case.txt"
 stat -c 'PLIST_STAT %a %s %n' "$PLIST" 2>&1 | tee -a "$SAVE/case.txt"
 cp "$PLIST" "$SAVE/com.evil.pwn43122.plist" 2>/dev/null
 grep -o 'STATS permission#[0-9]*[^"]\{0,220\}' "$SAVE/acp.log" 2>/dev/null | head -6 | tee -a "$SAVE/case.txt"
-grep -oE 'decide_file[^"]{0,220}|SandboxFinalState[^"]{0,200}|SandboxRuleSync[^"]{0,160}' "$SAVE/acp.log" "$RUNROOT/home/.workbuddy/logs/"*/*/*.log 2>/dev/null | head -20 | tee -a "$SAVE/case.txt"
+grep -hoE 'decide_file .*' "$SAVE/acp.log" "$RUNROOT/home/.workbuddy/logs/"*/*/*.log 2>/dev/null | head -5 | tee -a "$SAVE/case.txt"
+grep -hoE 'SandboxFinalState[^"]{0,200}|SandboxRuleSync[^"]{0,160}' "$SAVE/acp.log" 2>/dev/null | head -5 | tee -a "$SAVE/case.txt"
 
 # ================= 消费腿: 真 launchd 加载 RunAtLoad plist =================
 # bootstrap gui/<uid> 该 plist = 登录会话枚举 ~/Library/LaunchAgents 时对每个 plist 做的加载操作。
